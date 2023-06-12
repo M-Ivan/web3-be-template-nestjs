@@ -15,8 +15,8 @@ describe('app(controller)', () => {
 
   describe('getVersion', () => {
     it('should return server version', () => {
-      const appController = app.get(AppController);
-      expect(appController.getServerVersion()).toBe(getAppVersion());
+      const appService = app.get(AppService);
+      expect(appService.getVersion()).toBe(getAppVersion());
     });
   });
 });
