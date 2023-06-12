@@ -1,9 +1,10 @@
 import {
   CACHE_MANAGER,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   Logger,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Web3Service } from '../web3/web3.service';
 import { LoginInput } from './dto/loginInput.dto';
@@ -36,7 +37,14 @@ export class AuthService {
       const signerAddress = ethers.verifyMessage(input.msg, input.sig);
 
       if (signerAddress !== input.address) {
-        throw new UnauthorizedException();
+        throw new HttpException(
+          {
+            status: HttpStatus.UNAUTHORIZED, // Status code. i.e 401
+            message: `Message was not signed by address ${input.address}`, // Detail of the error
+            code: 'invalid_signature', // App-scoped code for front-end error handling
+          },
+          HttpStatus.UNAUTHORIZED, // Res.statusCode
+        );
       }
 
       const authSession = new AuthSession();
