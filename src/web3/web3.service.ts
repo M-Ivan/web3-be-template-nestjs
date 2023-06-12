@@ -86,7 +86,7 @@ export class Web3Service {
    * @param {address} contract contract requiring the abi
    * @returns {JSON} json document
    */
-  getAbiForContract(contract: string): Record<string, unknown>[] {
+  private getAbiForContract(contract: string): Record<string, unknown>[] {
     let abi: Record<string, unknown>[];
 
     switch (contract) {
