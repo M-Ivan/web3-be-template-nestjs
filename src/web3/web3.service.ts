@@ -80,28 +80,6 @@ export class Web3Service {
   }
 
   /**
-   * @method getSymbolOfToken
-   * Gets the symbol of a token.
-   *
-   * @param {address} tokenContract the token to consult
-   * @returns {string} symbol
-   */
-  async getSymbolOfToken(tokenContract: ContractsEnum): Promise<string> {
-    try {
-      const symbol = await this.callContract({
-        contract: tokenContract,
-        method: 'symbol',
-        arguments: [],
-      });
-
-      return symbol;
-    } catch (e) {
-      this.logger.error(e);
-      throw e;
-    }
-  }
-
-  /**
    * @method getAbiForContract
    * Helper function that helps with the ABI management in code.
    *
@@ -119,8 +97,8 @@ export class Web3Service {
         throw new HttpException(
           {
             message: `Contract ${contract} is not yet supported for processing on app version: ${getAppVersion()}`,
-            statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-            statusText: 'Unprocessable Entity',
+            status: HttpStatus.UNPROCESSABLE_ENTITY,
+            code: 'unknown_contract',
           },
           HttpStatus.UNPROCESSABLE_ENTITY,
         );
