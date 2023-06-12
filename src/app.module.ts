@@ -1,10 +1,11 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import * as redisStore from 'cache-manager-redis-store';
 import { Web3Module } from './web3/web3.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [

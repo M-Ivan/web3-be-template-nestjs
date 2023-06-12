@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { getAppVersion } from './common/helpers/configuration.helper';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getVersion(): string {
+    return getAppVersion();
   }
 }

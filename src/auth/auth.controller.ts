@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { ethers } from 'ethers';
 import { Response } from 'express';
 import { Web3Service } from '../web3/web3.service';
@@ -6,6 +6,9 @@ import { AuthService } from './auth.service';
 import { LoginInput } from './dto/loginInput.dto';
 import { LoginOutput } from './dto/loginOutput.dto';
 import * as cookie from 'cookie';
+import { Authenticate } from './decorators/auth.decorator';
+import { ReqUser } from './decorators/reqUser.decorator';
+import { AuthSession } from './dto/authSession.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -31,5 +34,11 @@ export class AuthController {
     );
 
     return result;
+  }
+
+  @Authenticate()
+  @Get('me')
+  getAuthUserSession(@ReqUser() user: AuthSession) {
+    return user;
   }
 }

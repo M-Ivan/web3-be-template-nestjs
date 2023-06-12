@@ -20,8 +20,7 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   constructor(
     private readonly web3Service: Web3Service,
-    @Inject(CACHE_MANAGER)
-    private readonly cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   /**
@@ -44,6 +43,8 @@ export class AuthService {
       authSession.address = input.address;
 
       const sessionId = uuid();
+
+      await this.setAuthSession(sessionId, authSession);
 
       return { address: input.address, sessionId };
     } catch (e) {
@@ -105,7 +106,6 @@ export class AuthService {
         Number(process.env.APP_AUTH_LOGIN_EXPIRES_SECONDS) * 1000;
 
       data.expires = Date.now() + maxAgeMs; // Expiration date in Unix timestamp
-
       data.sessionId = sessionId;
 
       // Do whatever with your auth session here
