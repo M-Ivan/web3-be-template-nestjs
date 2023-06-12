@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  # Redis
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis-db
+    networks:
+      - default
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+    ports:
+      - '${REDIS_PORT}:${REDIS_PORT}'
+    command: redis-server --save ${REDIS_SECONDS_TO_WRITE} ${REDIS_MIN_ENTRIES_TO_WRITE} --loglevel warning --requirepass ${REDIS_PASSWORD}
+networks:
+  default:
+    name: iUGO-network
+    driver: bridge

@@ -1,4 +1,10 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  Inject,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Web3Service } from '../web3/web3.service';
 import { LoginInput } from './dto/loginInput.dto';
 import { LoginOutput } from './dto/loginOutput.dto';
@@ -7,11 +13,16 @@ import { Request } from 'express';
 import * as cookie from 'cookie';
 import { v4 as uuid } from 'uuid';
 import { ethers } from 'ethers';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  constructor(private readonly web3Service: Web3Service) {}
+  constructor(
+    private readonly web3Service: Web3Service,
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
+  ) {}
 
   /**
    * @method signIn
@@ -68,9 +79,9 @@ export class AuthService {
     try {
       const key = `AUTH_SESSION_${sessionId}`;
 
-      //  const redisFetch: string = await this.cacheManager.get(key);
+      const session = await this.cacheManager.get<AuthSession>(key);
 
-      return JSON.parse('');
+      return session;
     } catch (e) {
       this.logger.error(e);
       throw e;
@@ -88,12 +99,18 @@ export class AuthService {
    */
   async setAuthSession(sessionId: string, data: AuthSession): Promise<boolean> {
     try {
-      data.expires =
-        Date.now() + Number(process.env.APP_AUTH_LOGIN_EXPIRES_SECONDS) * 1000; // Expiration date in Unix timestamp
+      const key = `AUTH_SESSION_${sessionId}`;
+
+      const maxAgeMs =
+        Number(process.env.APP_AUTH_LOGIN_EXPIRES_SECONDS) * 1000;
+
+      data.expires = Date.now() + maxAgeMs; // Expiration date in Unix timestamp
 
       data.sessionId = sessionId;
 
       // Do whatever with your auth session here
+
+      await this.cacheManager.set(key, data, maxAgeMs);
 
       return true;
     } catch (e) {
