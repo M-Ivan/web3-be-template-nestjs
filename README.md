@@ -5,7 +5,7 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A template <a href="https://nestjs.org" target="_blank">NestJS</a> repository for building decentralized applications</p>
+  <p align="center">A template <a href="https://nestjs.com" target="_blank">NestJS</a> repository for building decentralized applications</p>
 
 ## Description
 
