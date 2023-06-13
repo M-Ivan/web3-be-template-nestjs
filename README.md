@@ -28,8 +28,8 @@
 - [Web3 Module](#web3-module)
 - - [Contract management](#contract-management)
 - - [BalanceOf](#balanceof)
-- - - [endpoint](#endpoint-details)
-- - - [function](#balanceof-function)
+- - - [Endpoint](#endpoint-details)
+- - - [Function](#function)
 
 ## Auth module
 
