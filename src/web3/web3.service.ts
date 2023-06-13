@@ -5,6 +5,7 @@ import { ContractsEnum } from './enum/contracts.enum';
 import { ContractAbis } from './static/contractAbis.static';
 import { BalanceOutput } from './dto/balanceOutput.dto';
 import { getAppVersion } from '../common/helpers/configuration.helper';
+import { TokenStandardEnum } from './enum/tokenStandard.enum';
 
 @Injectable()
 export class Web3Service {
@@ -54,6 +55,41 @@ export class Web3Service {
   }
 
   /**
+   * @method balanceOf
+   *
+   * @param {address} address to consult
+   * @param {address} tokenContract to consult
+   * @param {TokenStandardEnum} standard the token type
+   * @returns {BalanceOutput} balance details
+   */
+  async balanceOf(
+    address: string,
+    tokenContract: string,
+    standard: TokenStandardEnum,
+  ): Promise<BalanceOutput> {
+    try {
+      switch (standard) {
+        case TokenStandardEnum.ERC20:
+          return await this.getBalanceOfTokenInAddress(address, tokenContract);
+        case TokenStandardEnum.ERC721:
+          return await this.getTokenIdsForAddress(address, tokenContract);
+        default:
+          throw new HttpException(
+            {
+              message: `Unknown token standard, received ${standard}`,
+              status: HttpStatus.UNPROCESSABLE_ENTITY,
+              code: 'unknown_token_type',
+            },
+            HttpStatus.UNPROCESSABLE_ENTITY,
+          );
+      }
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  /**
    * @method getBalanceOfTokenInAddress
    * Gets the total balance of tokens (ERC20 or ERC721) that an address has.
    *
@@ -61,9 +97,9 @@ export class Web3Service {
    * @param {address} tokenContract the token to consult
    * @returns {BalanceOutput} balance details
    */
-  async getBalanceOfTokenInAddress(
+  private async getBalanceOfTokenInAddress(
     address: string,
-    tokenContract: ContractsEnum,
+    tokenContract: string,
   ): Promise<BalanceOutput> {
     try {
       const balance = await this.callContract({
@@ -115,9 +151,9 @@ export class Web3Service {
    * @param {address} tokenContract ERC721 contract
    * @returns {BalanceOutput} Balance output details.
    */
-  async getTokenIdsForAddress(
+  private async getTokenIdsForAddress(
     address: string,
-    tokenContract: ContractsEnum,
+    tokenContract: string,
   ): Promise<BalanceOutput> {
     try {
       const tokenBalance = await this.getBalanceOfTokenInAddress(

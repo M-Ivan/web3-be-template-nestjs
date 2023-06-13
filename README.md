@@ -218,7 +218,7 @@ export class SampleService {
       '0xMyContractAddress'
       );
 
-    if (!requesterBalance.tokenIds.includes) {
+    if (!requesterBalance.tokenIds.includes(12)) {
       // Do something
     }
   }
