@@ -28,10 +28,8 @@
 - [Web3 Module](#web3-module)
 - - [Contract management](#contract-management)
 - - [BalanceOf](#balanceof)
-- - - [erc20 endpoint](#endpoint-details-erc20)
-- - - [erc20 function](#balanceof-function-erc20)
-- - - [erc721 endpoint](#endpoint-details-erc721)
-- - - [erc721 function](#balanceof-function-erc721)
+- - - [endpoint](#endpoint-details)
+- - - [function](#balanceof-function)
 
 ### Auth module
 
@@ -136,11 +134,15 @@ You can also resume this into a single line using the `callContract` syntax suga
 
 The web3 module provides both a set of non-protected endpoints as well as the respective internal functions to check the balance of a wallet address.
 
-##### Endpoint details (erc20)
+##### Endpoint details
 
-- URL: [http://server/web3/balance/address/:address/token/:tokenContract/erc20]()
+- URL: [http://server/web3/balance/address/:address/token/:tokenContract/:standard]()
 - Verb: GET
 - Response(application/json)
+- - Params
+- - address: Address to consult balanceOf
+- - tokenContract: contract of the token to consult
+- - standard: token standard (erc20, erc721, etc)
 
 ```json
 {
@@ -150,12 +152,13 @@ The web3 module provides both a set of non-protected endpoints as well as the re
 }
 ```
 
-##### BalanceOf function (erc20)
+##### Function
 
-There might be scenarios where you need to validate if some user has the balance that it claims to have. For this purpose, you can make use of the `getBalanceOfTokenInAddress` function. This function acepts two arguments
+There might be scenarios where you need to validate if some user has the balance that it claims to have. For this purpose, you can make use of the `balanceOf` function. This function acepts three arguments
 
 - address (to consult)
-- tokenContract (token erc20 address)
+- tokenContract (token contract address)
+- standard (token standard)
 
 Example usage
 
@@ -168,57 +171,13 @@ export class SampleService {
 
   async myMethod(requesterAddress: string) {
     const requesterBalance = await this.web3Service
-    .getBalanceOfTokenInAddress(
+    .balanceOf(
       requesterAddress,
-      '0xMyContractAddress'
+      '0xMyContractAddress',
+      TokenStandardEnum.ERC721
       );
 
     if (requesterBalance.amount < minAmount) {
-      // Do something
-    }
-  }
-}
-```
-
-##### Endpoint details (erc721)
-
-- URL: [http://server/web3/balance/address/:address/token/:tokenContract/erc721]()
-- Verb: GET
-- Response(application/json)
-
-```json
-{
-  "address": "0x0address",
-  "amount": "amountWithDecimals",
-  "tokenContract": "0x0erc20Contract",
-  "tokenIds": [1, 2, 3]
-}
-```
-
-##### BalanceOf function (erc721)
-
-Similarly, you can consult the amount and token ids in possesion of a specified address using the `getTokenIdsForAddress` method. Function receives two arguments
-
-- address (to consult)
-- tokenContract (token erc20 address)
-
-Example usage
-
-```TypeScript
-@Injectable()
-export class SampleService {
-  // First inject the web3 service
-  constructor(private readonly web3Service: Web3Service){
-  }
-
-  async myMethod(requesterAddress: string) {
-    const requesterBalance = await this.web3Service
-    .getTokenIdsForAddress(
-      requesterAddress,
-      '0xMyContractAddress'
-      );
-
-    if (!requesterBalance.tokenIds.includes(12)) {
       // Do something
     }
   }
