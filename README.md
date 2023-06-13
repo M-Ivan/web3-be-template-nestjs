@@ -1,5 +1,6 @@
 <p align="center">
 <img src="https://ethereum.org/static/810eb64d89629231aa4d8c7fe5f20ee5/69de1/developers-eth-blocks.webp" width="300" alt="Decentralization" />
+<img src="https://camo.githubusercontent.com/5f54c0817521724a2deae8dedf0c280a589fd0aa9bffd7f19fa6254bb52e996a/68747470733a2f2f6e6573746a732e636f6d2f696d672f6c6f676f2d736d616c6c2e737667" width="200" alt="Nestjs" />
 </p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
@@ -53,6 +54,8 @@ The auth module provides a public endpoint to allow users perform login by doing
 
 Endpoint replies with a cookie `sessionId` with the id of the session in the redis cache instance. This session expires at the `.env` specified `APP_AUTH_LOGIN_EXPIRES_SECONDS` variable and will be validated on each request where the route is protected by the [`@Authenticate`](#authenticate-route-decorator)
 decorator
+
+Try it with the online myEtherWallet [sign message feature](https://www.myetherwallet.com/wallet/sign)!
 
 ### Authenticate route decorator
 
