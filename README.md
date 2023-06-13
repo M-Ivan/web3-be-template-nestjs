@@ -1,6 +1,10 @@
 <p align="center">
-<img src="https://ethereum.org/static/810eb64d89629231aa4d8c7fe5f20ee5/69de1/developers-eth-blocks.webp" width="300" alt="Decentralization" />
-<img src="https://camo.githubusercontent.com/5f54c0817521724a2deae8dedf0c280a589fd0aa9bffd7f19fa6254bb52e996a/68747470733a2f2f6e6573746a732e636f6d2f696d672f6c6f676f2d736d616c6c2e737667" width="200" alt="Nestjs" />
+  <a href="https://ethereum.org">
+    <img src="https://ethereum.org/static/810eb64d89629231aa4d8c7fe5f20ee5/69de1/developers-eth-blocks.webp" width="300" alt="Decentralization" />
+  </a>
+  <a href="https://nestjs.com">
+    <img src="https://camo.githubusercontent.com/5f54c0817521724a2deae8dedf0c280a589fd0aa9bffd7f19fa6254bb52e996a/68747470733a2f2f6e6573746a732e636f6d2f696d672f6c6f676f2d736d616c6c2e737667" width="200" alt="Nestjs" />
+  </a>
 </p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
