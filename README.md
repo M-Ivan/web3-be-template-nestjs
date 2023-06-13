@@ -25,7 +25,13 @@
 - - [Login](#login)
 - - [Authenticate decorator](#authenticate-route-decorator)
 - - [Req.user decorator](#authenticate-route-decorator)
-- [Web Module]()
+- [Web3 Module](#web3-module)
+- - [Contract management](#contract-management)
+- - [BalanceOf](#balanceof)
+- - - [erc20 endpoint](#endpoint-details-erc20)
+- - - [erc20 function](#balanceof-function-erc20)
+- - - [erc721 endpoint](#endpoint-details-erc721)
+- - - [erc721 function](#balanceof-function-erc721)
 
 ### Auth module
 
@@ -91,7 +97,7 @@ export class SampleController {
 }
 ```
 
-### Web Module
+### Web3 Module
 
 The web3 module provides a set of out-of-the-box features and helpers for common use-cases when working in web3. It is also SOLID compliant.
 You can take advantage of the [dependency-injection](https://docs.nestjs.com/fundamentals/custom-providers) Nest feature to make the web3 module methods available in your block of code.
@@ -128,7 +134,7 @@ You can also resume this into a single line using the `callContract` syntax suga
 
 #### BalanceOf
 
-The web3 module provides both a non-protected endpoint as well as a internal function to check the balance of a wallet address.
+The web3 module provides both a set of non-protected endpoints as well as the respective internal functions to check the balance of a wallet address.
 
 ##### Endpoint details (erc20)
 
@@ -144,7 +150,7 @@ The web3 module provides both a non-protected endpoint as well as a internal fun
 }
 ```
 
-##### BalanceOf function
+##### BalanceOf function (erc20)
 
 There might be scenarios where you need to validate if some user has the balance that it claims to have. For this purpose, you can make use of the `getBalanceOfTokenInAddress` function. This function acepts two arguments
 
@@ -189,7 +195,7 @@ export class SampleService {
 }
 ```
 
-##### BalanceOf function
+##### BalanceOf function (erc721)
 
 Similarly, you can consult the amount and token ids in possesion of a specified address using the `getTokenIdsForAddress` method. Function receives two arguments
 
@@ -220,6 +226,8 @@ export class SampleService {
 ```
 
 ## Installation
+
+Installation is simple enough as running the following prompts
 
 ```bash
 # copy .env vars
