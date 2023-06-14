@@ -13,5 +13,5 @@ services:
     command: redis-server --save ${REDIS_SECONDS_TO_WRITE} ${REDIS_MIN_ENTRIES_TO_WRITE} --loglevel warning --requirepass ${REDIS_PASSWORD}
 networks:
   default:
-    name: iUGO-network
+    name: web3-backend
     driver: bridge
