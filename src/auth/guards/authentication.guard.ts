@@ -21,7 +21,7 @@ export class AuthenticationGuard implements CanActivate {
       const response = context.switchToHttp().getResponse();
 
       const sessionId = this.authService.extractSessionId(request);
-      if (!sessionId)
+      if (!sessionId) {
         throw new HttpException(
           {
             code: 'unauthenticated',
@@ -30,9 +30,10 @@ export class AuthenticationGuard implements CanActivate {
           },
           HttpStatus.UNAUTHORIZED,
         );
+      }
 
       const authSession = await this.authService.getAuthSession(sessionId);
-      if (!authSession)
+      if (!authSession) {
         throw new HttpException(
           {
             code: 'invalid_session',
@@ -41,6 +42,7 @@ export class AuthenticationGuard implements CanActivate {
           },
           HttpStatus.UNAUTHORIZED,
         );
+      }
 
       // Refresh session
       await this.authService.setAuthSession(authSession.sessionId, authSession);
