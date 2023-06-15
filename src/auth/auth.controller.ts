@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
-import { ethers } from 'ethers';
 import { Response } from 'express';
 import { Web3Service } from '../web3/web3.service';
 import { AuthService } from './auth.service';

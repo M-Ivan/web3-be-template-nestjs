@@ -1,6 +1,8 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
   Logger,
 } from '@nestjs/common';
@@ -19,10 +21,26 @@ export class AuthenticationGuard implements CanActivate {
       const response = context.switchToHttp().getResponse();
 
       const sessionId = this.authService.extractSessionId(request);
-      if (!sessionId) return false;
+      if (!sessionId)
+        throw new HttpException(
+          {
+            code: 'unauthenticated',
+            message: `Unauthorized access`,
+            statusText: 'Unauthorized',
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
 
       const authSession = await this.authService.getAuthSession(sessionId);
-      if (!authSession) return false;
+      if (!authSession)
+        throw new HttpException(
+          {
+            code: 'invalid_session',
+            message: `Invalid session`,
+            statusText: 'Unauthorized',
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
 
       // Refresh session
       await this.authService.setAuthSession(authSession.sessionId, authSession);
