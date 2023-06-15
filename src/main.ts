@@ -23,6 +23,13 @@ async function bootstrap() {
       },
     );
 
+  app.enableCors({
+    origin: process.env.APP_CORS_CLIENT_ORIGIN,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    optionsSuccessStatus: 200,
+    credentials: true,
+  });
+
   await app.listen(process.env.APP_PORT);
   logger.log(
     `Server listening on http(s)://localhost:${
