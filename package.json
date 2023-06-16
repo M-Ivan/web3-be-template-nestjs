@@ -32,6 +32,7 @@
     "ethers": "^6.5.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5",
+    "siwe": "^2.1.4",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

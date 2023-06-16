@@ -15,6 +15,7 @@ import * as cookie from 'cookie';
 import { v4 as uuid } from 'uuid';
 import { ethers } from 'ethers';
 import { Cache } from 'cache-manager';
+import { generateNonce, SiweMessage } from 'siwe';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,23 @@ export class AuthService {
     private readonly web3Service: Web3Service,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
+
+  /**
+   * @method generateNonce
+   * Generates and stores a nonce for security reassons
+   * @returns {string} generated nonce
+   */
+  async generateNonce(): Promise<string> {
+    try {
+      const nonce = generateNonce();
+      await this.cacheManager.set(`NONCE_${nonce}`, nonce, 300 * 1000);
+
+      return nonce;
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
 
   /**
    * @method signIn
@@ -34,27 +52,58 @@ export class AuthService {
    */
   async signIn(input: LoginInput): Promise<LoginOutput> {
     try {
-      const signerAddress = ethers.verifyMessage(input.msg, input.sig);
+      const nonce = await this.cacheManager.get(`NONCE_${input.nonce}`);
 
-      if (signerAddress !== input.address) {
+      if (!nonce) {
         throw new HttpException(
           {
-            status: HttpStatus.UNAUTHORIZED, // Status code. i.e 401
-            message: `Message was not signed by address ${input.address}`, // Detail of the error
-            code: 'invalid_signature', // App-scoped code for front-end error handling
+            code: 'invalid_nonce',
+            message: `The nonce you provided is invalid or expired`,
+            statusText: 'Unauthorized',
           },
-          HttpStatus.UNAUTHORIZED, // Res.statusCode
+          HttpStatus.UNAUTHORIZED,
         );
       }
 
-      const authSession = new AuthSession();
-      authSession.address = input.address;
+      const siweMessage = new SiweMessage(input.msg);
+      const verifyResult = await siweMessage.verify({
+        signature: input.sig,
+        nonce: input.nonce,
+      });
+
+      if (!verifyResult.success) {
+        throw new HttpException(
+          {
+            code: 'invalid_signature',
+            message: `The signature you provided does not match the message`,
+            statusText: 'Unauthorized',
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
+      const { data: message } = verifyResult;
 
       const sessionId = uuid();
 
-      await this.setAuthSession(sessionId, authSession);
+      const session = new AuthSession();
+      session.address = message.address;
+      session.chainId = message.chainId;
+      session.domain = message.domain;
+      session.expirationTime = message.expirationTime;
+      session.issuedAt = message.issuedAt;
+      session.nonce = message.nonce;
+      session.notBefore = message.notBefore;
+      session.requestId = message.requestId;
+      session.resources = message.resources;
+      session.statement = message.statement;
+      session.uri = message.uri;
+      session.version = message.version;
 
-      return { address: input.address, sessionId };
+      await this.setAuthSession(sessionId, session);
+      await this.cacheManager.del(`NONCE_${input.nonce}`);
+
+      return { sessionId };
     } catch (e) {
       this.logger.error(e);
 
@@ -113,7 +162,7 @@ export class AuthService {
       const maxAgeMs =
         Number(process.env.APP_AUTH_LOGIN_EXPIRES_SECONDS) * 1000;
 
-      data.expires = Date.now() + maxAgeMs; // Expiration date in Unix timestamp
+      data.sessionExpires = Date.now() + maxAgeMs; // Expiration date in Unix timestamp
       data.sessionId = sessionId;
 
       // Do whatever with your auth session here
@@ -121,6 +170,15 @@ export class AuthService {
       await this.cacheManager.set(key, data, maxAgeMs);
 
       return true;
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  async logoutUser(sessionId: string): Promise<void> {
+    try {
+      await this.cacheManager.del(`AUTH_SESSION_${sessionId}`);
     } catch (e) {
       this.logger.error(e);
       throw e;

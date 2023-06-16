@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class LoginInput {
   @IsString()
   @IsNotEmpty()
-  address: string;
+  nonce: string;
 
   @IsString()
   @IsNotEmpty()
