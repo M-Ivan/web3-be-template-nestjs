@@ -27,6 +27,8 @@
 # Documentation
 
 - [Auth module](#auth-module)
+- - [Siwe Support](#siwe-support)
+- - [Nonce](#nonce)
 - - [Login](#login)
 - - [Authenticate decorator](#authenticate-route-decorator)
 - - [Req.user decorator](#authenticate-route-decorator)
@@ -40,6 +42,20 @@
 
 The auth module provides out of the box session management using Redis as the store for the Auth Sessions. This allows for endpoints to be private while keeping server instance stateless.
 
+### SIWE Support
+
+This project includes support with [SIWE](https://login.xyz/). SIWE Is a auth standard for Web3 auth that follows best and secure practices. It dosen't requires to do any key management and its meant to provide a easy UX at the sign-in experience of a platform. The Ethereum foundation also encourages it's adoption for web3 apps.
+For more info please read the [docs](https://docs.login.xyz/).
+
+### Nonce
+
+The auth module provides a public endpoint to allow users perform login by doing signature validation.
+
+- URL: [http://server/auth/nonce]()
+- Verb: GET
+
+Generates an `nonce` (number used once) string that should be attached to the body of the [Login request](#login)
+
 ### Login
 
 The auth module provides a public endpoint to allow users perform login by doing signature validation.
@@ -51,7 +67,7 @@ The auth module provides a public endpoint to allow users perform login by doing
 ```json
 {
   "sig": "foo",
-  "address": "0x0etc",
+  "nonce": "192ilkfak2048",
   "msg": "msgHash"
 }
 ```
@@ -59,7 +75,7 @@ The auth module provides a public endpoint to allow users perform login by doing
 Endpoint replies with a cookie `sessionId` with the id of the session in the redis cache instance. This session expires at the `.env` specified `APP_AUTH_LOGIN_EXPIRES_SECONDS` variable and will be validated on each request where the route is protected by the [`@Authenticate`](#authenticate-route-decorator)
 decorator
 
-Try it with the online myEtherWallet [sign message feature](https://www.myetherwallet.com/wallet/sign)!
+Try it with the online etherescan [sign message feature](https://etherscan.io/verifiedSignatures#)!
 
 ### Authenticate route decorator
 
@@ -231,6 +247,10 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Acknowledments
+
+- [NestJS-Starter-repo](https://github.com/nestjs/typescript-starter)
 
 ## Stay in touch
 
