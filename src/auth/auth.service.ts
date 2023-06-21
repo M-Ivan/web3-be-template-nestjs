@@ -36,7 +36,7 @@ export class AuthService {
     try {
       const signerAddress = ethers.verifyMessage(input.msg, input.sig);
 
-      if (signerAddress !== input.address) {
+      if (signerAddress.toLowerCase() !== input.address.toLowerCase()) {
         throw new HttpException(
           {
             status: HttpStatus.UNAUTHORIZED, // Status code. i.e 401
