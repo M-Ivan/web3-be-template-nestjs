@@ -49,7 +49,7 @@ For more info please read the [docs](https://docs.login.xyz/).
 
 ### Nonce
 
-The auth module provides a public endpoint to allow users perform login by doing signature validation.
+The auth module provides a public endpoint to generate a `nonce` (number used once) which is a security best practice to prevent replay attacks.
 
 - URL: [http://server/auth/nonce]()
 - Verb: GET
