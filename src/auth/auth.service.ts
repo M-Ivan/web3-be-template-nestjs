@@ -176,6 +176,11 @@ export class AuthService {
     }
   }
 
+  /**
+   * @method logoutUser
+   * Destroys a user session
+   * @param sessionId the session id to destroy
+   */
   async logoutUser(sessionId: string): Promise<void> {
     try {
       await this.cacheManager.del(`AUTH_SESSION_${sessionId}`);
