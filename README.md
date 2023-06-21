@@ -248,7 +248,7 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## acknowledgements
+## Acknowledgements
 
 - [NestJS-Starter-repo](https://github.com/nestjs/typescript-starter)
 
