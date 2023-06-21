@@ -16,6 +16,8 @@
 
 [Nest](https://github.com/nestjs/nest) web3 starter repository.
 
+This repo includes a version with [SIWE](https://docs.login.xyz/) support. For the SIWE version use the branch `feat/siwe-supoort` as your template/clone.
+
 ## Features
 
 - Dockerized Redis
@@ -231,6 +233,11 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Acknowledgements
+
+- [NestJS-Starter-repo](https://github.com/nestjs/typescript-starter)
+
 
 ## Stay in touch
 
